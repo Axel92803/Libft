@@ -58,17 +58,17 @@ RM = rm -f
 NAME = libft.a
 
 ${NAME}: 	${OFILES}
-			${LIBC} ${NAME} ${OFILES} 
+			${LIBC} ${NAME} ${OFILES}
 
-all: 		${NAME}
+all: 		${NAME} bonus
 
 bonus:		${NAME} ${BOFILES}
 			${LIBC} ${NAME} ${BOFILES}
 
-clean: 
+clean:
 			${RM} ${OFILES} ${BOFILES}
 
-fclean: 	clean 
+fclean: 	clean
 			${RM} ${NAME}
 
 re: 		fclean ${NAME}
