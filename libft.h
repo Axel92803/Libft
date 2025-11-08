@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iontanvu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: itanvuia <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/29 19:11:37 by iontanvu          #+#    #+#             */
-/*   Updated: 2023/12/10 16:26:20 by iontanvu         ###   ########.fr       */
+/*   Created: 2025/11/08 12:34:35 by itanvuia          #+#    #+#             */
+/*   Updated: 2025/11/08 12:39:00 by itanvuia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define LIBFT_H
 # include <unistd.h>
 # include <stdlib.h>
+# include <stddef.h>
 # include <limits.h>
 
 typedef struct s_list
