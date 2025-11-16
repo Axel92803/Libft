@@ -6,7 +6,7 @@
 /*   By: itanvuia <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/25 13:50:09 by itanvuia          #+#    #+#             */
-/*   Updated: 2025/10/25 13:50:09 by itanvuia         ###   ########.fr       */
+/*   Updated: 2025/11/16 17:12:13 by itanvuia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,10 @@ char	**ft_split(char const *s, char c)
 	split = check(s, c);
 	if (!split)
 		return (0);
-	x = 0;
+	x = -1;
 	j = 0;
 	index = -1;
-	while (x <= ft_strlen(s))
+	while (++x <= ft_strlen(s))
 	{
 		if (s[x] != c && index < 0)
 			index = x;
@@ -98,7 +98,6 @@ char	**ft_split(char const *s, char c)
 				return (free_split(split, j - 1), NULL);
 			index = -1;
 		}
-		x++;
 	}
 	split[j] = 0;
 	return (split);
