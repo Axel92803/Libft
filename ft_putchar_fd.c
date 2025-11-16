@@ -6,7 +6,7 @@
 /*   By: itanvuia <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/25 13:50:09 by itanvuia          #+#    #+#             */
-/*   Updated: 2025/10/25 13:50:09 by itanvuia         ###   ########.fr       */
+/*   Updated: 2025/11/16 16:30:43 by itanvuia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,7 @@
 
 void	ft_putchar_fd(char c, int fd)
 {
+	if (!c || !fd)
+                return ;
 	write(fd, &c, 1);
 }
