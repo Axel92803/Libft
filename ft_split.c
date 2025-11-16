@@ -40,10 +40,25 @@ static char	*word_dup(const char *str, int start, int finish)
 
 	x = 0;
 	word = malloc((finish + 1 - start) * sizeof(char));
+	if (!word)
+		return (NULL);
 	while (start < finish)
 		word[x++] = str[start++];
 	word[x] = '\0';
 	return (word);
+}
+
+static void	free_split(char **split, size_t count)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < count)
+	{
+		free(split[i]);
+		i++;
+	}
+	free(split);
 }
 
 static char	**check(char const *s, char c)
@@ -78,7 +93,9 @@ char	**ft_split(char const *s, char c)
 			index = x;
 		else if ((s[x] == c || x == ft_strlen(s)) && index >= 0)
 		{
-			split[j++] = word_dup(s, index, x);
+			split[j] = word_dup(s, index, x);
+			if (!split[j++])
+				return (free_split(split, j - 1), NULL);
 			index = -1;
 		}
 		x++;
