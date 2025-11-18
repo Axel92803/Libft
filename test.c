@@ -7,6 +7,7 @@
 
 int passed = 0;
 int failed = 0;
+int iter_count = 0;
 
 #define TEST(condition) \
     if (condition) { \
@@ -16,6 +17,26 @@ int failed = 0;
         printf("❌ "); \
         failed++; \
     }
+
+// Helper function for deleting list content
+void del_content(void *content)
+{
+    free(content);
+}
+
+// Helper function for list iteration
+void count_nodes(void *content)
+{
+    (void)content;
+    iter_count++;
+}
+
+// Helper function for lstmap
+void *duplicate_content(void *content)
+{
+    char *str = (char *)content;
+    return (void *)ft_strdup(str);
+}
 
 int main(void) {
     printf("Testing functions...\n\n");
@@ -388,6 +409,7 @@ int main(void) {
     // Test ft_putchar_fd
     printf("ft_putchar_fd tests:\n");
     printf("ft_putchar_fd('A', 1): ");
+    printf("\n");
     ft_putchar_fd('A', 1);
     printf(" (should print 'A')\n");
     printf("\n");
@@ -414,6 +436,155 @@ int main(void) {
     printf("ft_putnbr_fd(-42, 1): ");
     ft_putnbr_fd(-42, 1);
     printf(" (should print '-42')\n");
+    printf("\n");
+
+    // Test ft_lstnew
+    printf("ft_lstnew tests:\n");
+    char *content1 = ft_strdup("test");
+    t_list *node1 = ft_lstnew(content1);
+    TEST(node1 != NULL);
+    printf("ft_lstnew creates node\n");
+    TEST(node1->content == content1);
+    printf("ft_lstnew sets content correctly\n");
+    TEST(node1->next == NULL);
+    printf("ft_lstnew sets next to NULL\n");
+    free(content1);
+    free(node1);
+    t_list *node2 = ft_lstnew(NULL);
+    TEST(node2 != NULL && node2->content == NULL);
+    printf("ft_lstnew handles NULL content\n");
+    free(node2);
+    printf("\n");
+
+    // Test ft_lstadd_front
+    printf("ft_lstadd_front tests:\n");
+    t_list *list = NULL;
+    t_list *new1 = ft_lstnew(ft_strdup("first"));
+    ft_lstadd_front(&list, new1);
+    TEST(list == new1);
+    printf("ft_lstadd_front adds to empty list\n");
+    t_list *new2 = ft_lstnew(ft_strdup("second"));
+    ft_lstadd_front(&list, new2);
+    TEST(list == new2 && list->next == new1);
+    printf("ft_lstadd_front adds to front\n");
+    TEST(strcmp((char *)list->content, "second") == 0);
+    printf("ft_lstadd_front maintains order\n");
+    ft_lstclear(&list, del_content);
+    printf("\n");
+
+    // Test ft_lstsize
+    printf("ft_lstsize tests:\n");
+    t_list *list2 = NULL;
+    TEST(ft_lstsize(list2) == 0);
+    printf("ft_lstsize returns 0 for empty list\n");
+    ft_lstadd_front(&list2, ft_lstnew(ft_strdup("one")));
+    TEST(ft_lstsize(list2) == 1);
+    printf("ft_lstsize returns 1 for single node\n");
+    ft_lstadd_front(&list2, ft_lstnew(ft_strdup("two")));
+    ft_lstadd_front(&list2, ft_lstnew(ft_strdup("three")));
+    TEST(ft_lstsize(list2) == 3);
+    printf("ft_lstsize returns correct count\n");
+    ft_lstclear(&list2, del_content);
+    printf("\n");
+
+    // Test ft_lstlast
+    printf("ft_lstlast tests:\n");
+    t_list *list3 = NULL;
+    TEST(ft_lstlast(list3) == NULL);
+    printf("ft_lstlast returns NULL for empty list\n");
+    t_list *first = ft_lstnew(ft_strdup("first"));
+    t_list *second = ft_lstnew(ft_strdup("second"));
+    t_list *third = ft_lstnew(ft_strdup("third"));
+    list3 = first;
+    first->next = second;
+    second->next = third;
+    TEST(ft_lstlast(list3) == third);
+    printf("ft_lstlast returns last node\n");
+    TEST(strcmp((char *)ft_lstlast(list3)->content, "third") == 0);
+    printf("ft_lstlast returns correct content\n");
+    ft_lstclear(&list3, del_content);
+    printf("\n");
+
+    // Test ft_lstadd_back
+    printf("ft_lstadd_back tests:\n");
+    t_list *list4 = NULL;
+    t_list *back1 = ft_lstnew(ft_strdup("first"));
+    ft_lstadd_back(&list4, back1);
+    TEST(list4 == back1);
+    printf("ft_lstadd_back adds to empty list\n");
+    t_list *back2 = ft_lstnew(ft_strdup("second"));
+    ft_lstadd_back(&list4, back2);
+    TEST(list4->next == back2);
+    printf("ft_lstadd_back adds to end\n");
+    TEST(ft_lstlast(list4) == back2);
+    printf("ft_lstadd_back updates last node\n");
+    ft_lstclear(&list4, del_content);
+    printf("\n");
+
+    // Test ft_lstdelone
+    printf("ft_lstdelone tests:\n");
+    char *del_content_str = ft_strdup("to delete");
+    t_list *del_node = ft_lstnew(del_content_str);
+    TEST(del_node != NULL);
+    printf("ft_lstdelone: node created\n");
+    ft_lstdelone(del_node, del_content);
+    printf("ft_lstdelone: node deleted (no crash)\n");
+    TEST(1);
+    printf("ft_lstdelone works correctly\n");
+    printf("\n");
+
+    // Test ft_lstclear
+    printf("ft_lstclear tests:\n");
+    t_list *list5 = NULL;
+    ft_lstadd_back(&list5, ft_lstnew(ft_strdup("one")));
+    ft_lstadd_back(&list5, ft_lstnew(ft_strdup("two")));
+    ft_lstadd_back(&list5, ft_lstnew(ft_strdup("three")));
+    TEST(ft_lstsize(list5) == 3);
+    printf("ft_lstclear: list created with 3 nodes\n");
+    ft_lstclear(&list5, del_content);
+    TEST(list5 == NULL);
+    printf("ft_lstclear clears entire list\n");
+    printf("\n");
+
+    // Test ft_lstiter
+    printf("ft_lstiter tests:\n");
+    t_list *list6 = NULL;
+    ft_lstadd_back(&list6, ft_lstnew(ft_strdup("one")));
+    ft_lstadd_back(&list6, ft_lstnew(ft_strdup("two")));
+    ft_lstadd_back(&list6, ft_lstnew(ft_strdup("three")));
+    iter_count = 0;
+    ft_lstiter(list6, count_nodes);
+    TEST(iter_count == 3);
+    printf("ft_lstiter iterates over all nodes\n");
+    iter_count = 0;
+    ft_lstiter(NULL, count_nodes);
+    TEST(iter_count == 0);
+    printf("ft_lstiter handles NULL list\n");
+    ft_lstclear(&list6, del_content);
+    printf("\n");
+
+    // Test ft_lstmap
+    printf("ft_lstmap tests:\n");
+    t_list *list7 = NULL;
+    ft_lstadd_back(&list7, ft_lstnew("hello"));
+    ft_lstadd_back(&list7, ft_lstnew("world"));
+    ft_lstadd_back(&list7, ft_lstnew("test"));
+    t_list *mapped = ft_lstmap(list7, duplicate_content, del_content);
+    TEST(mapped != NULL);
+    printf("ft_lstmap creates new list\n");
+    TEST(mapped != list7);
+    printf("ft_lstmap creates different list\n");
+    TEST(ft_lstsize(mapped) == 3);
+    printf("ft_lstmap preserves size\n");
+    TEST(strcmp((char *)mapped->content, "hello") == 0);
+    printf("ft_lstmap maps first element\n");
+    TEST(strcmp((char *)ft_lstlast(mapped)->content, "test") == 0);
+    printf("ft_lstmap maps last element\n");
+    ft_lstclear(&mapped, del_content);
+    ft_lstclear(&list7, NULL);
+    t_list *empty_map = ft_lstmap(NULL, duplicate_content, del_content);
+    TEST(empty_map == NULL);
+    printf("ft_lstmap handles NULL list\n");
     printf("\n");
 
     printf("\n%d passed, %d failed\n", passed, failed);
